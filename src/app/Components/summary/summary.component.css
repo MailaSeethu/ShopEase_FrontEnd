@@ -1,0 +1,154 @@
+/* @media (max-width: 767.98px) {
+    .border-sm-start-none {
+        border-left: none !important;
+    }
+}
+#img{
+    width: 165px;
+    height: 165px;
+    margin-left: 9px;
+    align-items: center;
+
+}
+
+@media (max-width: 767.98px) {
+    .border-sm-start-none {
+        border-left: none !important;
+    }
+}
+#img {
+    width: 165px;
+    height: 165px;
+    margin-left: 9px;
+    align-items: center;
+} */
+
+
+/* body {
+    font-family: 'Arial', sans-serif;
+}
+
+.bg-image {
+    overflow: hidden;
+    position: relative;
+    display: block;
+}
+
+.bg-image img {
+    transition: transform 0.3s ease-in-out;
+}
+
+.bg-image:hover img {
+    transform: scale(1.1);
+}
+
+.text-primary {
+    color: #007bff !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+.card {
+    border: none;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-body:hover {
+    background-color: #f8f9fa;
+}
+
+#img {
+    width: 100%;
+    height: auto;
+}
+
+@media (max-width: 767.98px) {
+    .border-sm-start-none {
+        border-left: none !important;
+    }
+} */
+
+
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.bg-image {
+    overflow: hidden;
+    position: relative;
+    display: block;
+}
+
+.bg-image img {
+    width: 100%;
+    height: auto;
+    max-width: 150px;
+    /* Adjust the max width of the images */
+    transition: transform 0.3s ease-in-out;
+}
+
+.bg-image:hover img {
+    transform: scale(1.1);
+}
+
+.text-primary {
+    color: #007bff !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+.card {
+    border: none;
+}
+
+.card-body {
+    padding: 1rem;
+    /* Adjust the padding within the cards */
+}
+
+.card-body:hover {
+    background-color: #f8f9fa;
+}
+
+#img {
+    width: 100%;
+    height: auto;
+}
+
+@media (max-width: 767.98px) {
+    .border-sm-start-none {
+        border-left: none !important;
+    }
+}
+
+.mat-snack-bar-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    width: auto !important;
+    min-width: 200px !important; /* Adjust as necessary */
+    z-index: 1000 !important;
+  }
+  
+  
+  
