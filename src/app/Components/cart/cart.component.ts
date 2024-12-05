@@ -52,7 +52,7 @@ export class CartComponent implements OnInit, AfterViewInit {
   QuentityCount: any[];
   size: number;
   totalquantity: number = 0;
-  totalmrp: number = 0;
+  totalprice: number = 0;
   SelectArray: any[];
   currentDateTime = new Date();
   originalDate = new Date();
@@ -184,7 +184,7 @@ export class CartComponent implements OnInit, AfterViewInit {
         this.createArray();
         // this.TrashData();
         for (var i = 0; i < this.UserBasedCart.length; i++) {
-          this.totalmrp += this.QuentityCount[i] * this.UserBasedCart[i].productPrice
+          this.totalprice += this.QuentityCount[i] * this.UserBasedCart[i].productPrice
         }
       });
 
@@ -204,10 +204,10 @@ export class CartComponent implements OnInit, AfterViewInit {
 
         this.CreateArrayWithoutLogin();
         // this.TrashData();
-        this.totalmrp = 0;
+        this.totalprice = 0;
         for (var i = 0; i < this.UserBasedCart.length; i++) {
 
-          this.totalmrp += this.QuentityCount[i] * this.UserBasedCart[i].productPrice;
+          this.totalprice += this.QuentityCount[i] * this.UserBasedCart[i].productPrice;
 
         }
       });
@@ -228,9 +228,9 @@ export class CartComponent implements OnInit, AfterViewInit {
 
     localStorage.setItem('cartcount', JSON.stringify(this.totalquantity))
     this.SelectArray = Array(this.size).fill(true);
-    this.totalmrp = 0;
+    this.totalprice = 0;
     for (var i = 0; i < this.UserBasedCart.length; i++) {
-      this.totalmrp += this.QuentityCount[i] * this.UserBasedCart[i].productPrice;
+      this.totalprice += this.QuentityCount[i] * this.UserBasedCart[i].productPrice;
     }
   }
   // DeleteFromCart(id: number) {
@@ -331,7 +331,7 @@ export class CartComponent implements OnInit, AfterViewInit {
     this.QuentityCount[index] = n + 1;
 
     this.totalquantity = this.QuentityCount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    this.totalmrp += this.UserBasedCart[index].productPrice;
+    this.totalprice += this.UserBasedCart[index].productPrice;
     localStorage.setItem('cartcount', JSON.stringify(this.totalquantity))
 
   }
@@ -342,7 +342,7 @@ export class CartComponent implements OnInit, AfterViewInit {
     })
     this.QuentityCount[index] = n - 1;
     this.totalquantity = this.QuentityCount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    this.totalmrp -= this.UserBasedCart[index].productPrice;
+    this.totalprice -= this.UserBasedCart[index].productPrice;
 
     localStorage.setItem('cartcount', JSON.stringify(this.totalquantity))
   }
@@ -363,10 +363,10 @@ export class CartComponent implements OnInit, AfterViewInit {
 
   TotalPricing() {
     this.totalquantity = this.QuentityCount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    this.totalmrp = 0;
+    this.totalprice = 0;
     for (var i = 0; i < this.QuentityCount.length; i++) {
 
-      this.totalmrp += this.QuentityCount[i] * this.UserBasedCart[i].productPrice;
+      this.totalprice += this.QuentityCount[i] * this.UserBasedCart[i].productPrice;
 
     }
 
@@ -378,7 +378,7 @@ export class CartComponent implements OnInit, AfterViewInit {
     if (this.SelectArray[index]) {
 
       this.totalquantity -= this.QuentityCount[index];
-      this.totalmrp -= this.QuentityCount[index] * this.UserBasedCart[index].productPrice;
+      this.totalprice -= this.QuentityCount[index] * this.UserBasedCart[index].productPrice;
 
       this.SelectArray[index] = false;
       this.QuentityCount[index] = 1;
@@ -387,7 +387,7 @@ export class CartComponent implements OnInit, AfterViewInit {
     else {
       this.QuentityCount[index] = 1;
       this.totalquantity += this.QuentityCount[index];
-      this.totalmrp += this.QuentityCount[index] * this.UserBasedCart[index].productPrice;
+      this.totalprice += this.QuentityCount[index] * this.UserBasedCart[index].productPrice;
       this.SelectArray[index] = true;
 
     }

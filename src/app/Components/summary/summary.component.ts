@@ -33,6 +33,7 @@ export class SummaryComponent implements OnInit {
   productsstatus: Products = new Products();
   date = new Date();
   promoCode: string = '';
+  TaxAmount: number = 0;
 
   Products = Array();
   NoofItemsSelected = Array();
@@ -56,6 +57,7 @@ export class SummaryComponent implements OnInit {
     this.TotalPrice = 0;
     this.DiscountPrice = 0;
     this.selectedaddress = JSON.parse(localStorage.getItem('addressid') as string);
+    //this.calculateTax();
 
   }
   openSnackBar(message: string,time:number) {
@@ -69,7 +71,7 @@ export class SummaryComponent implements OnInit {
       this.promoCodes = r
       this.buyservice.isFirstOrder(this.userName).subscribe((res) => {
         console.log('isFirstOrder', res)
-        this.promoCodes.filter(x => x.couponcode == 'SAVE100')[0].isApplicable = res
+        this.promoCodes.filter(x => x.couponcode == 'SAVE10')[0].isApplicable = res
       })
     })
   }
@@ -137,72 +139,73 @@ export class SummaryComponent implements OnInit {
   applyPromoCode() {
     if (this.selectedPromoCode) {
       const selectedPromo = this.promoCodes.find(promo => promo.couponcode === this.selectedPromoCode);
-
+  
       if (selectedPromo) {
         if (!selectedPromo.isApplicable) {
           this.selectedPromoCode = null;
-          this.openSnackBar('This promo code is not applicable to your order.',3000);
+          this.openSnackBar('This promo code is not applicable to your order.', 3000);
           return;
         }
-
+  
         switch (this.selectedPromoCode.toUpperCase()) {
-          case 'SHOPEASE200':
-            if (this.TotalPrice >=599)
-              {
-                this.DiscountPrice = 200;
-                this.GrandTotal = this.TotalPrice - this.DiscountPrice;
-                this.triggerConfetti();
-              }
-              else{
-                this.selectedPromoCode = null;
-                this.openSnackBar('The total value of cart items applicable for this coupon should be more than Rs.599.',5000);
-              }
+          case 'SHOPEASE20':
+            if (this.TotalPrice >= 50) {
+              this.DiscountPrice = 20;
+              this.GrandTotal = this.TotalPrice - this.DiscountPrice;
+              this.triggerConfetti(); 
+              this.calculateTax();
+            } else {
+              this.selectedPromoCode = null;
+              this.openSnackBar('The total value of cart items applicable for this coupon should be more than Rs.50.', 5000);
+            }
             break;
           case 'SUMMERSALE':
             this.DiscountPrice = Math.round(this.TotalPrice * 0.25);
             this.GrandTotal = Math.round(this.TotalPrice * 0.75);
             this.triggerConfetti();
+            this.calculateTax();
             break;
           case 'FREESHIP':
-            if (this.Deliveryfee > 0 && this.TotalPrice >499) {
+            if (this.Deliveryfee > 0 && this.TotalPrice > 50) {
               this.GrandTotal = this.TotalPrice - this.Deliveryfee;
               this.Deliveryfee = 0;
               this.triggerConfetti();
-            }
-            else if (this.Deliveryfee == 0 && this.TotalPrice >499)
-            {
+              this.calculateTax();
+            } else if (this.Deliveryfee == 0 && this.TotalPrice > 50) {
               this.selectedPromoCode = null;
-              this.openSnackBar('Offer already applied',3000)
+              this.openSnackBar('Offer already applied', 3000);
               this.triggerConfetti();
             }
             break;
-          case 'SAVE100':
-            if(this.TotalPrice>=299)
-            {
-              this.DiscountPrice = 100;
+          case 'SAVE10':
+            if (this.TotalPrice >= 50) {
+              this.DiscountPrice = 10;
               this.GrandTotal = this.TotalPrice - this.DiscountPrice;
               this.triggerConfetti();
-            }
-            else{
+              this.calculateTax();
+            } else {
               this.selectedPromoCode = null;
-              let remainingtoadd = 300-this.TotalPrice
-              this.openSnackBar(`Shop for ${remainingtoadd} more to avail this offer.`,4000);
+              let remainingtoadd = 50 - this.TotalPrice;
+              this.openSnackBar(`Shop for ${remainingtoadd} more to avail this offer.`, 4000);
             }
             break;
           case 'BUY2GET50OFF':
             this.applyBuy2Get50Off();
             break;
           default:
-            this.openSnackBar('Invalid promo code',3000);
+            this.openSnackBar('Invalid promo code', 3000);
         }
+  
         this.DiscountPrice = Math.round(this.DiscountPrice);
         this.GrandTotal = Math.round(this.GrandTotal);
+  
+        
+        
       }
     } else {
-      this.openSnackBar('Please select a valid promo code - Invali Coupon code',5000)
+      this.openSnackBar('Please select a valid promo code - Invalid Coupon code', 5000);
     }
   }
-
   applyBuy2Get50Off() {
     let sum  = this.NoofItemsSelected.reduce((accumulator, currentValue) => {
       return accumulator + currentValue;
@@ -217,12 +220,22 @@ export class SummaryComponent implements OnInit {
         this.DiscountPrice = Math.round(discount);
         this.GrandTotal = Math.round(this.TotalPrice - discount);
         this.triggerConfetti();
+        this.calculateTax();
       }
     } else {
       this.selectedPromoCode = null;
       this.openSnackBar('You need to buy at least 3 items to avail this offer',4000)
     }
   }
+  
+  calculateTax() {
+    const taxRate = 0.10; // 10% tax rate
+    // Ensure the tax is calculated on the final GrandTotal after all discounts and adjustments
+    this.TaxAmount = Math.round(this.GrandTotal * taxRate);
+    this.GrandTotal += this.TaxAmount;
+    this.GrandTotal+=this.Deliveryfee;
+  }
+  
 
   PlaceOrder() {
     let user = localStorage.getItem('userName') as string;
@@ -237,7 +250,7 @@ export class SummaryComponent implements OnInit {
     this.FinalOrderPlace.orderid = "orderid";
     this.FinalOrderPlace.productId = "";
     this.FinalOrderPlace.noOfItems = "";
-    this.FinalOrderPlace.totalPrice = 0;
+    this.FinalOrderPlace.totalPrice = this.GrandTotal;
     for (var i = 0; i < this.length; i++) {
       this.FinalOrderPlace.totalPrice = this.GrandTotal;
       this.FinalOrderPlace.productId += this.buy[i].productId;
@@ -296,18 +309,21 @@ export class SummaryComponent implements OnInit {
         this.TotalPrice += prodarray[0].productPrice * noofitems;
         this.GrandTotal = this.TotalPrice
 
-        if (this.GrandTotal < 299) {
-          this.Deliveryfee = 50
+        if (this.GrandTotal < 50) {
+          this.Deliveryfee = 7
         } else {
           console.log(this.GrandTotal)
           this.Deliveryfee = 0
           console.log(this.Deliveryfee)
         }
+        this.calculateTax();
 
       })
     }
 
     this.date.setMinutes(this.date.getMinutes() + 15);
+    
+    
 
   }
   ProductDetails(pid: number) {

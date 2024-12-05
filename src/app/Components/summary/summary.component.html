@@ -55,6 +55,10 @@
                                 shipping</h6>
 
                         </div>
+                        <div class="d-flex justify-content-between">
+                            <h6>Tax:</h6>
+                            <h6 class="text-danger">${{TaxAmount}}</h6>
+                        </div>
 
                         <div class="d-flex justify-content-between">
                             <h6>Discount:</h6>
@@ -89,7 +93,7 @@
                                 <button class="btn btn-outline-secondary btn-sm mt-2"
                                     (click)="applyPromoCode()">Apply</button>
                             </div> -->
-                        <h6 class="text-success">Free shipping</h6>
+                        <!-- <h6 class="text-success">Free shipping</h6> -->
                         <button (click)="PlaceOrder()" class="btn btn-primary btn-sm mt-2" type="button">Place
                             Order</button>
                         <button (click)="goback()" class="btn btn-outline-primary btn-sm mt-2"
