@@ -60,10 +60,10 @@ export class SummaryComponent implements OnInit {
     //this.calculateTax();
 
   }
-  openSnackBar(message: string,time:number) {
+  openSnackBar(message: string, time: number) {
     this.snackBar.open(message, 'Close', {
       duration: time,
-      panelClass: ['warning-snackbar'] 
+      panelClass: ['warning-snackbar']
     });
   }
   getCouponCodes() {
@@ -139,20 +139,20 @@ export class SummaryComponent implements OnInit {
   applyPromoCode() {
     if (this.selectedPromoCode) {
       const selectedPromo = this.promoCodes.find(promo => promo.couponcode === this.selectedPromoCode);
-  
+
       if (selectedPromo) {
         if (!selectedPromo.isApplicable) {
           this.selectedPromoCode = null;
           this.openSnackBar('This promo code is not applicable to your order.', 3000);
           return;
         }
-  
+
         switch (this.selectedPromoCode.toUpperCase()) {
           case 'SHOPEASE20':
             if (this.TotalPrice >= 50) {
               this.DiscountPrice = 20;
               this.GrandTotal = this.TotalPrice - this.DiscountPrice;
-              this.triggerConfetti(); 
+              this.triggerConfetti();
               this.calculateTax();
             } else {
               this.selectedPromoCode = null;
@@ -195,26 +195,26 @@ export class SummaryComponent implements OnInit {
           default:
             this.openSnackBar('Invalid promo code', 3000);
         }
-  
+
         this.DiscountPrice = Math.round(this.DiscountPrice);
         this.GrandTotal = Math.round(this.GrandTotal);
-  
-        
-        
+
+
+
       }
     } else {
       this.openSnackBar('Please select a valid promo code - Invalid Coupon code', 5000);
     }
   }
   applyBuy2Get50Off() {
-    let sum  = this.NoofItemsSelected.reduce((accumulator, currentValue) => {
+    let sum = this.NoofItemsSelected.reduce((accumulator, currentValue) => {
       return accumulator + currentValue;
-    }, 0);
+    }, 0);
     console.log(sum)
     const itemCounts = this.NoofItemsSelected.reduce((acc, count) => acc + count, 0);
     if (sum >= 3) {
       const sortedProducts = this.Products.slice().sort((a, b) => a.productPrice - b.productPrice);
-      const thirdCheapest = sortedProducts[sortedProducts.length-1];
+      const thirdCheapest = sortedProducts[sortedProducts.length - 1];
       if (thirdCheapest) {
         const discount = thirdCheapest.productPrice * 0.5;
         this.DiscountPrice = Math.round(discount);
@@ -224,18 +224,18 @@ export class SummaryComponent implements OnInit {
       }
     } else {
       this.selectedPromoCode = null;
-      this.openSnackBar('You need to buy at least 3 items to avail this offer',4000)
+      this.openSnackBar('You need to buy at least 3 items to avail this offer', 4000)
     }
   }
-  
+
   calculateTax() {
     const taxRate = 0.10; // 10% tax rate
     // Ensure the tax is calculated on the final GrandTotal after all discounts and adjustments
     this.TaxAmount = Math.round(this.GrandTotal * taxRate);
     this.GrandTotal += this.TaxAmount;
-    this.GrandTotal+=this.Deliveryfee;
+    this.GrandTotal += this.Deliveryfee;
   }
-  
+
 
   PlaceOrder() {
     let user = localStorage.getItem('userName') as string;
@@ -276,7 +276,7 @@ export class SummaryComponent implements OnInit {
       this.productsstatus.productId = parseInt(this.buy[i].productId);
 
       await this.productservice.UpdateStock(this.productsstatus).toPromise();
-      const res = await this.cartservice.Delete(this.productsstatus.productId,this.productsstatus.noofstocks).toPromise();
+      const res = await this.cartservice.Delete(this.productsstatus.productId, this.productsstatus.noofstocks).toPromise();
       // this.cartservice.ClearCartCount()
 
       if (res && res.productId == this.productsstatus.productId) {
@@ -295,37 +295,52 @@ export class SummaryComponent implements OnInit {
   }
 
   TotalProducts() {
-
-    this.buy = this.cartservice.GetCheckOut()
-    console.log("cartservice", this.buy)
+    // Retrieve cart items
+    this.buy = this.cartservice.GetCheckOut();
+    console.log("cartservice", this.buy);
     this.length = Object.keys(this.buy).length;
 
-    for (var i = 0; i < this.length; i++) {
+    let NumberOfProducts = 0; // Initializing the number of products
+
+    
+    for (let i = 0; i < this.length; i++) {
       let id = parseInt(this.buy[i].productId);
-      let noofitems = parseInt(this.buy[i].noOfItems)
+      let noofitems = parseInt(this.buy[i].noOfItems);
+      NumberOfProducts += noofitems; 
+
+      // Fetch product details and calculate total price
       this.productservice.GetProducts().subscribe((result) => {
-        let prodarray = result.filter(x => x.productId == id)
-        console.log("price", prodarray)
+        let prodarray = result.filter(x => x.productId == id);
+        console.log("price", prodarray);
+
+        // Calculate the total price for the current product
         this.TotalPrice += prodarray[0].productPrice * noofitems;
-        this.GrandTotal = this.TotalPrice
+        this.GrandTotal = this.TotalPrice;
 
-        if (this.GrandTotal < 50) {
-          this.Deliveryfee = 7
-        } else {
-          console.log(this.GrandTotal)
-          this.Deliveryfee = 0
-          console.log(this.Deliveryfee)
+
+        if (NumberOfProducts >= 10) {
+          this.Deliveryfee = 0; // Free shipping for more than 10 products
+        } else if (NumberOfProducts >= 5 && NumberOfProducts < 10) {
+          this.Deliveryfee = (this.TotalPrice * 0.05); // 5% of the total price if between 5 and 9 products
+        } else if (NumberOfProducts >= 1 && NumberOfProducts <= 4) {
+          this.Deliveryfee = (this.TotalPrice * 0.10); // 10% of the total price if between 1 and 4 products
         }
-        this.calculateTax();
 
-      })
+        // Round the delivery fee to 2 decimal places
+        this.Deliveryfee = parseFloat(this.Deliveryfee.toFixed(2));
+
+
+        console.log("Delivery Fee: ", this.Deliveryfee);
+
+        // Recalculating  tax based on the updated GrandTotal
+        this.calculateTax();
+      });
     }
 
+    // Seting  the delivery time to 15 minutes from now
     this.date.setMinutes(this.date.getMinutes() + 15);
-    
-    
-
   }
+
   ProductDetails(pid: number) {
     this.productservice.updateproductid(pid);
     let a = "productdetails";
@@ -333,3 +348,4 @@ export class SummaryComponent implements OnInit {
     this.router.navigate(['productdetails']);
   }
 }
+

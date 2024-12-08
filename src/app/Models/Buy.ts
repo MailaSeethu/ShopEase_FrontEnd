@@ -10,4 +10,7 @@ export class Buy{
     orderid:string;
     totalPrice:number; 
 
+    
 } 
+
+   

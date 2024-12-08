@@ -8,6 +8,9 @@ import { Cart } from '../Models/Cart';
   providedIn: 'root'
 })
 export class CartService {
+  ClearCart() {
+    throw new Error('Method not implemented.');
+  }
   private cartItems: any[] = []; // Replace `any` with your product type
   private cartItemCount = new BehaviorSubject<number>(0); // Default to 0 if no count in localStorage
 

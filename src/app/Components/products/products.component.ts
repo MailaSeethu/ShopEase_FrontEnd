@@ -178,23 +178,17 @@ export class ProductsComponent implements OnInit {
     }
 
   }
-  sortDropdown(f: any) 
-  {
-    this.e = this.products.sort((n1, n2) => n1.productPrice - n2.productPrice);
-    if (f.target.value == "Price:Low to High") {
-     
-      this.products = this.e;
-    }
-    else if (f.target.value == "Sort By Price") {
-      this.products = this.dropdowndata;
-    }
-    else {
-      for (var i = this.e.length - 1; i >= 0; i--) {
-        this.l.push(this.e[i])
-      }
-      this.products = this.l;
-    }
-  }
+  sortDropdown(f: any) {
+    const sortValue = f.target.value;
+  
+    if (sortValue === "Price: Low to High") {
+      this.products = [...this.products].sort((n1, n2) => n1.productPrice - n2.productPrice);
+    } else if (sortValue === "Price: High to Low") {
+      this.products = [...this.products].sort((n1, n2) => n2.productPrice - n1.productPrice);
+    } else if (sortValue === "Sort By Price") {
+      this.products = [...this.dropdowndata]; // Reset to the original list
+    }
+  }
 
 
   onClick(pid: number, rating: number, halfstar: number) {
