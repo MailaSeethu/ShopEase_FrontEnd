@@ -60,6 +60,48 @@ export class SummaryComponent implements OnInit {
     //this.calculateTax();
 
   }
+
+  cardDetails = {
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+    cardHolderName: ''
+  };
+
+  formatCardNumber() {
+    this.cardDetails.cardNumber = this.cardDetails.cardNumber
+      .replace(/\D/g, '') // Remove non-digit characters
+      .replace(/(\d{4})/g, '$1 ') // Add space after every 4 digits
+      .trim(); // Remove trailing space
+  }
+
+  validateAndProceed() {
+    const { cardNumber, expiryDate, cvv, cardHolderName } = this.cardDetails;
+    if (!cardNumber || cardNumber.length !== 19) {
+      this.openSnackBar('Invalid Card Number. Please enter a valid 16-digit card number.', 3000);
+      return;
+    }
+
+    if (!expiryDate || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+      this.openSnackBar('Invalid Expiry Date. Format should be MM/YY.', 3000);
+      return;
+    }
+
+    if (!cvv || cvv.length !== 3) {
+      this.openSnackBar('Invalid CVV. Please enter a 3-digit CVV.', 3000);
+      return;
+    }
+
+    if (!cardHolderName || cardHolderName.trim().length < 3) {
+      this.openSnackBar('Invalid Cardholder Name. Please enter a valid name.', 3000);
+      return;
+    }
+
+    // this.openSnackBar('Card details saved successfully!', 3000);
+    this.PlaceOrder();
+  }
+
+
   openSnackBar(message: string, time: number) {
     this.snackBar.open(message, 'Close', {
       duration: time,

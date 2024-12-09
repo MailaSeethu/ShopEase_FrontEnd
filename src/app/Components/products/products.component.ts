@@ -51,7 +51,7 @@ export class ProductsComponent implements OnInit {
     private cartservice: CartService, private signupservice: SignupService, private router: Router, private toast: NgToastService) { }
 
   ngOnInit(): void {
-    
+
     this.GetCart();
     this.Productsservice.search.subscribe(val => {
       this.searchkey = val;
@@ -69,7 +69,7 @@ export class ProductsComponent implements OnInit {
     this.GetProducts();
 
     this.GetDropDown();
-    
+
   }
   GetProducts() {
     this.Productsservice.GetProducts().subscribe((result) => {
@@ -84,61 +84,53 @@ export class ProductsComponent implements OnInit {
 
     });
   }
- 
+
 
 
 
   AddToCart(p: Products) {
-    
-    if (this.signupservice.isLoggedin()) 
-    {
+
+    if (this.signupservice.isLoggedin()) {
 
       this.c.userName = localStorage.getItem('userName') as string;
       this.c.productId = p.productId;
       this.c.quantity = 1;
-      if (this.CheckExistance(this.c.productId)) 
-      {
-       
+      if (this.CheckExistance(this.c.productId)) {
+
         this.cartservice.Add(this.c).subscribe((res) => {
-        
+
         });
       }
-     
+
     }
-    else 
-    {
+    else {
       this.Productsservice.UpdateProductId(p.productId);
-      
+
     }
   }
-  CartWithOutLogin(product: Products) 
-  {
+  CartWithOutLogin(product: Products) {
     this.Productsservice.UpdateProductId(product.productId);
-    
+
   }
-  CheckExistance(productid: number): boolean 
-  {
+  CheckExistance(productid: number): boolean {
 
     let name = localStorage.getItem('userName') as string;
 
     let p = this.cart.filter(x => x.userName == name);
     let Quantity = p.filter(x => x.productId == productid)
-   
-    if (Quantity.length>0) 
-    {
+
+    if (Quantity.length > 0) {
       let productquantity = this.dropdowndata.filter(x => x.productId == productid)
       let cartqty = Quantity[0].quantity;
       let qty = productquantity[0].noofstocks;
-   
+
       let result = false;
-      if (cartqty < qty) 
-      {
+      if (cartqty < qty) {
         result = true;
       }
       return result;
     }
-    else 
-    {
+    else {
       return true;
     }
 
@@ -151,7 +143,7 @@ export class ProductsComponent implements OnInit {
       this.productsfromdrop = result;
 
       for (var i = 0; i < this.dropdowndata.length; i++) {
-    
+
         this.dropdown.push(this.dropdowndata[i].productCategory)
         let c = this.dropdown.filter(x => x == this.dropdowndata[i].productCategory)
 
@@ -167,7 +159,7 @@ export class ProductsComponent implements OnInit {
       }
     });
   }
-  
+
   selectChange(dropdown: any) {
 
     if (dropdown.target.value != "Category") {
@@ -180,15 +172,15 @@ export class ProductsComponent implements OnInit {
   }
   sortDropdown(f: any) {
     const sortValue = f.target.value;
-  
+
     if (sortValue === "Price: Low to High") {
       this.products = [...this.products].sort((n1, n2) => n1.productPrice - n2.productPrice);
     } else if (sortValue === "Price: High to Low") {
       this.products = [...this.products].sort((n1, n2) => n2.productPrice - n1.productPrice);
     } else if (sortValue === "Sort By Price") {
       this.products = [...this.dropdowndata]; // Reset to the original list
-    }
-  }
+    }
+  }
 
 
   onClick(pid: number, rating: number, halfstar: number) {
@@ -197,13 +189,12 @@ export class ProductsComponent implements OnInit {
 
     this.router.navigate(['productdetails']);
   }
-  refresh(){
+  refresh() {
     window.location.reload()
   }
-  signin()
-  {
+  signin() {
     this.router.navigate(['login']);
   }
 
- 
+
 }
