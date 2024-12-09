@@ -88,6 +88,8 @@ export class AdminAccessComponent implements OnInit {
     this.formValue.controls["noofstocks"].setValue(data.noofstocks);
     this.formValue.controls["imageurl"].setValue(data.imageurl);
     this.formValue.controls["productDescription"].setValue(data.productDescription);
+    this.formValue.controls["productRating"].setValue(data.productRating);
+    this.formValue.controls["sellerName"].setValue(data.sellerName);
 
   }
   
@@ -99,8 +101,10 @@ export class AdminAccessComponent implements OnInit {
     this.m.productCategory = this.formValue.value.productCategory;
     this.m.noofstocks = this.formValue.value.noofstocks;
     this.m.imageurl = this.formValue.value.imageurl;
+    this.m.productRating = this.formValue.value.productRating;
     this.m.productDescription = this.formValue.value.productDescription;
-
+    this.m.sellerName = this.formValue.value.sellerName;
+    console.log(this.m)
     this.productsservice.UpdateProducts(this.m).subscribe({
       complete: () => {
         
@@ -108,8 +112,8 @@ export class AdminAccessComponent implements OnInit {
         this.formValue.reset();
         this.GetProducts();
       },
-      error: () => {
-        alert('Error');
+      error: (err) => {
+        alert('Error'+err.message);
       }
     })
   }
