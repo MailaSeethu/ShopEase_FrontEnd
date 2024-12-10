@@ -18,7 +18,9 @@ export class ProductsServiceService {
 
     return this.http.get<Products[]>("https://localhost:7053/api/Products");
   }
-
+  GetAllProductCategories():Observable<String[]>{
+    return this.http.get<String[]>("https://localhost:7053/api/Products/ProductCategory");
+  }
 
 
 

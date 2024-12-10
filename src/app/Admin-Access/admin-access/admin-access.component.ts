@@ -14,10 +14,12 @@ export class AdminAccessComponent implements OnInit {
   formValue!: FormGroup;
   products: Products[];
   panelOpenState = false;
-  errormessage: string ="";
+  errormessage: string = "";
   Product: Products = new Products();
   m: Products = new Products();
   deleteid: number;
+  ProductCategories: String[];
+  newCategory: string = ""; // To store the new category
   constructor(private productsservice: ProductsServiceService, private formBuilder: FormBuilder,
     private router: Router) { }
 
@@ -32,21 +34,24 @@ export class AdminAccessComponent implements OnInit {
       noofstocks: [''],
       imageurl: [''],
       productDescription: [''],
-      productRating:[''],
-      sellerName:['']
-
+      productRating: [''],
+      sellerName: ['']
 
     })
-
-
     this.GetProducts();
+    this.GetProductCategories();
   }
 
-  ProductDetails(pid:number)
-  {
+  GetProductCategories() {
+    this.productsservice.GetAllProductCategories().subscribe((result) => {
+      this.ProductCategories = result;
+      console.log(this.ProductCategories)
+    })
+  }
+  ProductDetails(pid: number) {
     this.productsservice.updateproductid(pid);
-    let a="productdetails";
-    localStorage.setItem('pdetails',a)
+    let a = "productdetails";
+    localStorage.setItem('pdetails', a)
     this.router.navigate(['productdetails']);
   }
 
@@ -56,30 +61,30 @@ export class AdminAccessComponent implements OnInit {
     })
   }
   AddProduct() {
-    
-    if (
-      this.Product.productCategory == null ||
-      this.Product.productName == null ||
-      this.Product.productPrice == 0
-    ) {
-      this.errormessage = "Fields cannot be empty";
+    if (this.Product.productCategory === 'new') {
+      // Add new category to the list
+      if (!this.newCategory.trim()) {
+        this.errormessage = "New category cannot be empty.";
+        return;
+      }
+      this.Product.productCategory = this.newCategory.trim();
+      this.ProductCategories.push(this.newCategory.trim());
     }
-    else {
-      console.log(this.Product)
+
+    if (!this.Product.productCategory || !this.Product.productName || this.Product.productPrice === 0) {
+      this.errormessage = "Fields cannot be empty";
+    } else {
+      console.log(this.Product);
       this.productsservice.AddProducts(this.Product).subscribe((result) => {
-       
         this.Product = new Products();
-        this.panelOpenState=false;
-        this.errormessage ="";
+        this.panelOpenState = false;
+        this.errormessage = "";
+        this.newCategory = "";
         this.GetProducts();
-
       });
-
     }
   }
-
-  editData(data: any)
-   {
+  editData(data: any) {
     this.m.productId = data.productId;
     this.formValue.controls["productId"].setValue(data.productId);
     this.formValue.controls["productName"].setValue(data.productName);
@@ -92,7 +97,7 @@ export class AdminAccessComponent implements OnInit {
     this.formValue.controls["sellerName"].setValue(data.sellerName);
 
   }
-  
+
   updateData() {
 
     this.m.productId = this.formValue.value.productId;
@@ -107,13 +112,13 @@ export class AdminAccessComponent implements OnInit {
     console.log(this.m)
     this.productsservice.UpdateProducts(this.m).subscribe({
       complete: () => {
-        
+
 
         this.formValue.reset();
         this.GetProducts();
       },
       error: (err) => {
-        alert('Error'+err.message);
+        alert('Error' + err.message);
       }
     })
   }
@@ -125,7 +130,7 @@ export class AdminAccessComponent implements OnInit {
 
   DeleteData() {
     this.productsservice.DeleteProduct(this.deleteid).subscribe((r) => {
-     
+
       this.GetProducts();
     });
   }
