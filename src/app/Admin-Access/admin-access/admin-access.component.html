@@ -21,20 +21,11 @@
 
             <div class="data-form">
                 <form #productForm="ngForm" (ngSubmit)="AddProduct(); productForm.reset();">
-                    <!-- Product Name -->
                     <div class="form-group">
                         <label for="productname">Product Name</label>
-                        <input 
-                            name="productname" 
-                            #productname="ngModel" 
-                            [(ngModel)]="Product.productName" 
-                            required 
-                            type="text" 
-                            [class.is-invalid]="productname.invalid && productname.touched" 
-                            placeholder="Product Name" 
-                            class="form-control" 
-                            id="productname"
-                        />
+                        <input name="productname" #productname="ngModel" [(ngModel)]="Product.productName" required
+                            type="text" [class.is-invalid]="productname.invalid && productname.touched"
+                            placeholder="Product Name" class="form-control" id="productname" />
                         <div *ngIf="productname.invalid && productname.touched" class="invalid-feedback">
                             <div *ngIf="productname.hasError('required')">
                                 Product name is required
@@ -42,18 +33,11 @@
                         </div>
                     </div>
 
-                    <!-- Product Category -->
                     <div class="form-group">
                         <label for="productcategory">Product Category</label>
-                        <select 
-                            name="productcategory" 
-                            #productcategory="ngModel" 
-                            [(ngModel)]="Product.productCategory" 
-                            required 
-                            [class.is-invalid]="productcategory.invalid && productcategory.touched" 
-                            class="form-control" 
-                            id="productcategory"
-                        >
+                        <select name="productcategory" #productcategory="ngModel" [(ngModel)]="Product.productCategory"
+                            required [class.is-invalid]="productcategory.invalid && productcategory.touched"
+                            class="form-control" id="productcategory">
                             <option *ngFor="let category of ProductCategories" [value]="category">
                                 {{ category }}
                             </option>
@@ -66,34 +50,17 @@
                         </div>
                     </div>
 
-                    <!-- New Category Input -->
                     <div class="form-group" *ngIf="Product.productCategory === 'new'">
                         <label for="newCategory">New Category</label>
-                        <input 
-                            name="newCategory" 
-                            [(ngModel)]="newCategory" 
-                            required 
-                            type="text" 
-                            placeholder="Enter New Category" 
-                            class="form-control" 
-                            id="newCategory"
-                        />
+                        <input name="newCategory" [(ngModel)]="newCategory" required type="text"
+                            placeholder="Enter New Category" class="form-control" id="newCategory" />
                     </div>
 
-                    <!-- Product Price -->
                     <div class="form-group">
                         <label for="price">Product Price</label>
-                        <input 
-                            name="productprice" 
-                            #productprice="ngModel" 
-                            [(ngModel)]="Product.productPrice" 
-                            required 
-                            type="number" 
-                            [class.is-invalid]="productprice.invalid && productprice.touched" 
-                            placeholder="Product Price" 
-                            class="form-control" 
-                            id="price"
-                        />
+                        <input name="productprice" #productprice="ngModel" [(ngModel)]="Product.productPrice" required
+                            type="number" [class.is-invalid]="productprice.invalid && productprice.touched"
+                            placeholder="Product Price" class="form-control" id="price" />
                         <div *ngIf="productprice.invalid && productprice.touched" class="invalid-feedback">
                             <div *ngIf="productprice.hasError('required')">
                                 Product price is required
@@ -101,20 +68,11 @@
                         </div>
                     </div>
 
-                    <!-- Stock -->
                     <div class="form-group">
                         <label for="stock">Stock</label>
-                        <input 
-                            name="productstock" 
-                            #productstock="ngModel" 
-                            [(ngModel)]="Product.noofstocks" 
-                            required 
-                            type="number" 
-                            [class.is-invalid]="productstock.invalid && productstock.touched" 
-                            placeholder="Stock" 
-                            class="form-control" 
-                            id="stock"
-                        />
+                        <input name="productstock" #productstock="ngModel" [(ngModel)]="Product.noofstocks" required
+                            type="number" [class.is-invalid]="productstock.invalid && productstock.touched"
+                            placeholder="Stock" class="form-control" id="stock" />
                         <div *ngIf="productstock.invalid && productstock.touched" class="invalid-feedback">
                             <div *ngIf="productstock.hasError('required')">
                                 Stock is required
@@ -122,49 +80,25 @@
                         </div>
                     </div>
 
-                    <!-- Image URL -->
                     <div class="form-group">
                         <label for="imgurl">Image URL</label>
-                        <input 
-                            name="imgurl" 
-                            #imageurl="ngModel" 
-                            [(ngModel)]="Product.imageurl" 
-                            type="text" 
-                            placeholder="Image Link" 
-                            class="form-control" 
-                            id="imgurl"
-                        />
+                        <input name="imgurl" #imageurl="ngModel" [(ngModel)]="Product.imageurl" type="text"
+                            placeholder="Image Link" class="form-control" id="imgurl" />
                     </div>
 
-                    <!-- Product Description -->
                     <div class="form-group">
                         <label for="productdescription">Product Description</label>
-                        <input 
-                            name="productdescription" 
-                            #productdescription="ngModel" 
-                            [(ngModel)]="Product.productDescription" 
-                            type="text" 
-                            placeholder="Product Description" 
-                            class="form-control" 
-                            id="productdescription"
-                        />
+                        <input name="productdescription" #productdescription="ngModel"
+                            [(ngModel)]="Product.productDescription" type="text" placeholder="Product Description"
+                            class="form-control" id="productdescription" />
                     </div>
 
-                    <!-- Seller Name -->
                     <div class="form-group">
                         <label for="sellerName">Seller Name</label>
-                        <input 
-                            name="sellerName" 
-                            #sellerName="ngModel" 
-                            [(ngModel)]="Product.sellerName" 
-                            type="text" 
-                            placeholder="Seller Name" 
-                            class="form-control" 
-                            id="sellerName"
-                        />
+                        <input name="sellerName" #sellerName="ngModel" [(ngModel)]="Product.sellerName" type="text"
+                            placeholder="Seller Name" class="form-control" id="sellerName" />
                     </div>
 
-                    <!-- Submit Button -->
                     <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">
                         Add Product
                     </button>
@@ -208,7 +142,6 @@
 
                 </td>
 
-                <!-- Button trigger modal -->
                 <td><button (click)="Delete(product.productId)" type="button" class="btn btn-primary"
                         data-toggle="modal" data-target="#exampleModalCenter">
                         Delete
@@ -217,8 +150,6 @@
             </tr>
         </tbody>
     </table>
-
-
 
 </div>
 

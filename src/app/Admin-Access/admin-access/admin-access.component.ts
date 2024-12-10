@@ -62,7 +62,7 @@ export class AdminAccessComponent implements OnInit {
   }
   AddProduct() {
     if (this.Product.productCategory === 'new') {
-      // Add new category to the list
+      
       if (!this.newCategory.trim()) {
         this.errormessage = "New category cannot be empty.";
         return;
